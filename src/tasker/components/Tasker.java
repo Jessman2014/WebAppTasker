@@ -38,7 +38,7 @@ public class Tasker extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User u = Login.validated(request);
 		if (u == null) {
-			response.sendRedirect("/login.html");
+			response.sendRedirect("/tasker/login.html");
 		}
 		else {
 			String id = request.getParameter("delete");
@@ -75,7 +75,7 @@ public class Tasker extends HttpServlet {
 			for (Task task : tasks) {
 				if (!(showTasks.equals("incomplete") && task.isCompleted())) {
 					writer.print("<tr> <form method=\"get\" action=\"/tasker/tasks\">");
-					writer.print("<td>" + task.getDescription() + "</td> <td> <input type=\"color\" value=\"" + task.getColor().getRGB() + "\"></td>");
+					writer.print("<td>" + task.getDescription() + "</td> <td> <input type=\"color\" value=\"#" + Integer.toHexString(task.getColor().getRGB() & 0xffffff) + "\"></td>");
 					writer.print("<td>" + format.format(task.getDate()) + "</td> <td>");
 					if (task.isCompleted())
 						writer.print("yes");
@@ -92,7 +92,7 @@ public class Tasker extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User u = Login.validated(request);
 		if (u == null) {
-			response.sendRedirect("/login.html");
+			response.sendRedirect("/tasker/login.html");
 		}
 		else {
 			try {

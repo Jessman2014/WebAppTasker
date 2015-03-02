@@ -50,13 +50,12 @@ public class TaskerDao {
 		int id;
 
 		List<Task> tasks = u.getTasks();
-		/*if (tasks == null)
+		if (tasks.size() == 0)
 			id = 0;
 		else {
 			Task lastTask = tasks.get(tasks.size());
 			id = lastTask.getId() + 1;
-		}*/
-		id = tasks.size();
+		}
 
 		Task t = new Task.Builder().description(description).date(date)
 				.color(color).completed(false).id(id).build();
@@ -67,10 +66,13 @@ public class TaskerDao {
 	
 	public void deleteTask(User u, int id) {
 		List<Task> tasks = u.getTasks();
+		int removalId = -1;
 		for (Task task : tasks) {
 			if (task.getId() == id)
-				tasks.remove(task);
+				removalId = tasks.indexOf(task);
 		}
+		if (id > -1)
+			tasks.remove(removalId);
 		u.setTasks(tasks);
 	}
 	

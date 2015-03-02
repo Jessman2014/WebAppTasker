@@ -57,7 +57,7 @@ public class Login extends HttpServlet {
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 					throws ServletException, java.io.IOException {
-		if (Login.validated(request) == null)
+		if (validated(request) == null)
 			response.sendRedirect("/tasker/login.html");
 		else
 			response.sendRedirect("/tasker/tasks");

@@ -2,6 +2,9 @@ package tasker.components;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -58,7 +61,17 @@ public class Tasker extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (Login.validated(request)) {
+			String description = request.getParameter("description");
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+			String dateStr = request.getParameter("date");
 			
+			try {
+				Date date = format.parse(dateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			data.addTask(description, date, color, u);
 		}
 		else
 			response.sendRedirect("/login.html");

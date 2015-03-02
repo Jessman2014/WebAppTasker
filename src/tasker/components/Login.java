@@ -19,70 +19,62 @@ public class Login extends HttpServlet {
 		return database;
 	}
 	
-	User u1 = new User.Builder()
-		.sid("4RcjPRZyBJNk8LJW2c3A")
+	/*User u1 = new User.Builder()
+		.sid()
 		.username("Bilbo")
 		.password("Baggins")
 		.build();
 	
 	User u2 = new User.Builder()
-		.sid("2qTxnnM542vdxRC3kYRf")
+		.sid()
 		.username("Frodo")
 		.password("Hobbit")
 		.build();
 	
 	User u3 = new User.Builder()
-		.sid("CSALbR3L6Tmv32D64mSa")
+		.sid()
 		.username("Gandalf")
 		.password("Wizard")
 		.build();
 	
 	User u4 = new User.Builder()
-		.sid("jAjZumCztLMquHW3zVMv")
+		.sid()
 		.username("Sauron")
 		.password("Evil")
 		.build();
-	
-	public static boolean validated (HttpServletRequest request) {
+	*/
+	public static User validated (HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		for (int i = 0; i < cookies.length; i++) {
 			if (cookies[i].getName().equals("sid")) {
 				String sid = cookies[i].getValue();
-				return database.authenticateUser(sid);
+				return database.getUser(sid);
 			}
 		}
-		return false;
+		return null;
 	}
-	
 	
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 					throws ServletException, java.io.IOException {
-		response.sendRedirect("/tasker/login.html");
+		if (Login.validated(request) == null)
+			response.sendRedirect("/tasker/login.html");
+		else
+			response.sendRedirect("/tasker/tasks");
 	}
 	
 	@Override
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, java.io.IOException {
-		database.addUser(u1);
-		database.addUser(u2);
-		database.addUser(u3);
-		database.addUser(u4);
-		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String sid = database.getSid(username, password);
-		if (sid != "") {
+		if (!sid.equals("")) {
 			Cookie validate = new Cookie ("sid", sid);
 			response.addCookie(validate);
 			response.sendRedirect("/tasker/tasks");
-			
 		}
 		else
 			response.sendRedirect("/tasker/login?error=1.html");
-		
-		
-		
-		
 	}
 }

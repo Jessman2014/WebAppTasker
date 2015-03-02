@@ -1,10 +1,12 @@
 package tasker.components;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import tasker.dao.TaskerDao;
+import tasker.model.Task;
+import tasker.model.User;
 
 @SuppressWarnings("serial")
 @WebServlet("/tasks")
@@ -31,7 +35,16 @@ public class Tasker extends HttpServlet {
 			"</head>";	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (Login.validated(request)) {
+		User u = Login.validated(request);
+		if (u == null) {
+			response.sendRedirect("/login.html");
+		}
+		else {
+			String id = request.getParameter("delete");
+			String showTasks = request.getParameter("showTasks");
+			if (!id.equals(""))
+				data.deleteTask(u, Integer.parseInt(id));
+			List<Task> tasks = u.getTasks();
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter writer = response.getWriter();
 			writer.println("<!DOCTYPE html>");
@@ -48,33 +61,50 @@ public class Tasker extends HttpServlet {
 			writer.print("</form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-4\">");
 			writer.print("<form method=\"get\" action=\"/tasker/tasks\">");
-			writer.print("<input name=\"show\" type=\"submit\" value=\"Show only incomplete\" class=\"form-control\">");
-			writer.print("</form> </div> </div>");
+			writer.print("<input name=\"showTasks\" type=\"submit\" class=\"form-control\">");
+			if (showTasks.equals("incomplete"))
+				writer.print("Show all");
+			else
+				writer.print("Show only incomplete");
+			writer.print("</input> </form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-9\">");
 			writer.print("<form method=\"get\" action=\"/tasker/tasks\">");
 			writer.print("<table class=\"table\"> <tr> <th>Description</th> <th>Color</th> <th>Due</th> <th>Completed</th> <th></th>");
+			for (Task task : tasks) {
+				if (!(showTasks.equals("incomplete") && task.isCompleted())) {
+					writer.print("<tr> <td>" + task.getDescription() + "</td> <td> <input type=\"color\">" + task.getColor() + "</input></td>");
+					writer.print("<td>" + task.getDate() + "</td> <td>");
+					if (task.isCompleted())
+						writer.print("yes");
+					else
+						writer.print("no");
+					writer.print("</td> <td> <input type=\"hidden\" name=\"delete\">" + task.getId() + "</input>");
+					writer.print("<input type=\"submit\" value=\"x\"> </td> </tr>");
+				}
+			}
 			writer.print("</table> </form> </div> </div> </div> </body> </html>");
 		}
-		else
-			response.sendRedirect("/tasker/login.html");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (Login.validated(request)) {
-			String description = request.getParameter("description");
-			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-			String dateStr = request.getParameter("date");
-			
+		User u = Login.validated(request);
+		if (u == null) {
+			response.sendRedirect("/login.html");
+		}
+		else {
 			try {
+				String description = request.getParameter("description");
+				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+				String dateStr = request.getParameter("date");
+				String colorStr = request.getParameter("color");
+				Color color = Color.decode(colorStr);
 				Date date = format.parse(dateStr);
+				data.addTask(description, date, color, u);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				//If the date doesn't parse correctly it will catch it here
 				e.printStackTrace();
 			}
-			data.addTask(description, date, color, u);
 		}
-		else
-			response.sendRedirect("/login.html");
 	}
 	
 	

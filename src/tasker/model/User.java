@@ -1,5 +1,6 @@
 package tasker.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -32,8 +33,14 @@ public class User {
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
+	public User (String sid, String username, String password) {
+		this.sid = sid;
+		this.username = username;
+		this.password = password;
+		this.tasks = new ArrayList<>();
+	}
 	
-	private User (Builder builder) {
+	/*private User (Builder builder) {
 		this.sid = builder.sid;
 		this.username = builder.username;
 		this.password = builder.password;
@@ -72,4 +79,5 @@ public class User {
 			return new User(this);
 		}
 	}
+	*/
 }

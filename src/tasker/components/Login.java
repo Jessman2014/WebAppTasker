@@ -75,6 +75,6 @@ public class Login extends HttpServlet {
 			response.sendRedirect("/tasker/tasks");
 		}
 		else
-			response.sendRedirect("/tasker/login?error=1.html");
+			response.sendRedirect("/tasker/login.html?error=1");
 	}
 }

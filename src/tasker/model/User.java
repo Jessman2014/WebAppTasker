@@ -3,15 +3,15 @@ package tasker.model;
 import java.util.List;
 
 public class User {
-	private String sid;
+	private int sid;
 	private String username;
 	private String password;
 	private List<Task> tasks;
 	
-	public String getSid() {
+	public int getSid() {
 		return sid;
 	}
-	public void setSid(String sid) {
+	public void setSid(int sid) {
 		this.sid = sid;
 	}
 	public String getUsername() {
@@ -41,14 +41,14 @@ public class User {
 	}
 	
 	public static class Builder {
-		private String sid;
+		private int sid;
 		private String username;
 		private String password;
 		private List<Task> tasks;
 		
 		public Builder() {}
 		
-		public Builder sid (String sid) {
+		public Builder sid (int sid) {
 			this.sid = sid;
 			return this;
 		}
@@ -63,7 +63,7 @@ public class User {
 			return this;
 		}
 		
-		public Builder task (List<Task> tasks) {
+		public Builder tasks (List<Task> task) {
 			this.tasks = tasks;
 			return this;
 		}

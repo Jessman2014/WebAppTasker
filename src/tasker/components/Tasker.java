@@ -23,6 +23,7 @@ import tasker.model.User;
 public class Tasker extends HttpServlet {
 	TaskerDao data = Login.getDatabase();
 	
+	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");	
 	String header = "<head>\n" + 
 			"    <meta http-equiv=\"Content-Type\" content=\"text/html\">\n" + 
 			"    <title>Survey</title>\n" + 
@@ -42,7 +43,9 @@ public class Tasker extends HttpServlet {
 		else {
 			String id = request.getParameter("delete");
 			String showTasks = request.getParameter("showTasks");
-			if (!id.equals(""))
+			if (showTasks == null)
+				showTasks = "all";
+			if (id != null)
 				data.deleteTask(u, Integer.parseInt(id));
 			List<Task> tasks = u.getTasks();
 			response.setContentType("text/html;charset=UTF-8");
@@ -53,7 +56,7 @@ public class Tasker extends HttpServlet {
 			writer.print("<div class=\"row\"> <div class=\"col-lg-2\">");
 			writer.print("<h1>Tasker</h1> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-9\">");
-			writer.print("<form class=\"form-inline\" method=\"post\" action=\"/tasker/Tasker\">");
+			writer.print("<form class=\"form-inline\" method=\"post\" action=\"/tasker/tasks\">");
 			writer.print("<input name=\"description\" type=\"text\" placeholder=\"task\" class=\"form-control\">");
 			writer.print("<input name=\"color\" type=\"color\" placeholder=\"black\" class=\"form-control\">");
 			writer.print("<input name=\"date\" type=\"date\" placeholder=\"mm/dd/yyyy\" class=\"form-control\">");
@@ -61,28 +64,28 @@ public class Tasker extends HttpServlet {
 			writer.print("</form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-4\">");
 			writer.print("<form method=\"get\" action=\"/tasker/tasks\">");
-			writer.print("<input name=\"showTasks\" type=\"submit\" class=\"form-control\">");
+			writer.print("<input name=\"showTasks\" type=\"submit\" class=\"form-control\" value=\"");
 			if (showTasks.equals("incomplete"))
 				writer.print("Show all");
 			else
 				writer.print("Show only incomplete");
-			writer.print("</input> </form> </div> </div>");
+			writer.print(" \"> </form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-9\">");
-			writer.print("<form method=\"get\" action=\"/tasker/tasks\">");
-			writer.print("<table class=\"table\"> <tr> <th>Description</th> <th>Color</th> <th>Due</th> <th>Completed</th> <th></th>");
+			writer.print("<table class=\"table\"> <tr> <th>Description</th> <th>Color</th> <th>Due</th> <th>Completed</th> <th></th> </tr>");
 			for (Task task : tasks) {
 				if (!(showTasks.equals("incomplete") && task.isCompleted())) {
-					writer.print("<tr> <td>" + task.getDescription() + "</td> <td> <input type=\"color\">" + task.getColor() + "</input></td>");
-					writer.print("<td>" + task.getDate() + "</td> <td>");
+					writer.print("<tr> <form method=\"get\" action=\"/tasker/tasks\">");
+					writer.print("<td>" + task.getDescription() + "</td> <td> <input type=\"color\" value=\"" + task.getColor().getRGB() + "\"></td>");
+					writer.print("<td>" + format.format(task.getDate()) + "</td> <td>");
 					if (task.isCompleted())
 						writer.print("yes");
 					else
 						writer.print("no");
-					writer.print("</td> <td> <input type=\"hidden\" name=\"delete\">" + task.getId() + "</input>");
-					writer.print("<input type=\"submit\" value=\"x\"> </td> </tr>");
+					writer.print("</td> <td> <input type=\"hidden\" name=\"delete\" value=\"" + task.getId() + "\">");
+					writer.print("<input type=\"submit\" value=\"x\"> </td> </form> </tr>");
 				}
 			}
-			writer.print("</table> </form> </div> </div> </div> </body> </html>");
+			writer.print("</table> </div> </div> </div> </body> </html>");
 		}
 	}
 
@@ -94,7 +97,6 @@ public class Tasker extends HttpServlet {
 		else {
 			try {
 				String description = request.getParameter("description");
-				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 				String dateStr = request.getParameter("date");
 				String colorStr = request.getParameter("color");
 				Color color = Color.decode(colorStr);
@@ -104,6 +106,7 @@ public class Tasker extends HttpServlet {
 				//If the date doesn't parse correctly it will catch it here
 				e.printStackTrace();
 			}
+			response.sendRedirect("/tasker/tasks");
 		}
 	}
 	

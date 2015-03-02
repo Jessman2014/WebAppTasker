@@ -1,6 +1,8 @@
 package tasker.dao;
 
 import java.awt.Color;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,20 @@ public class TaskerDao {
 	users.add(u2);
 	users.add(u3);
 	users.add(u4);
+	
+	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	
+	try {
+		addTask("hey there", format.parse("2015-03-26"), Color.CYAN, u1);
+		addTask("this is new task", format.parse("2015-03-27"), Color.BLUE, u1);
+		addTask("what is up dude", format.parse("2014-03-26"), Color.GREEN, u1);
+		addTask("another task", format.parse("2015-09-26"), Color.BLACK, u1);
+		addTask("garage talk", format.parse("2014-08-26"), Color.YELLOW, u1);
+		addTask("exception stuff", format.parse("2015-03-26"), Color.CYAN, u1);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	}
 	
 	public User getUser (String sid) {
@@ -34,12 +50,13 @@ public class TaskerDao {
 		int id;
 
 		List<Task> tasks = u.getTasks();
-		if (tasks == null)
+		/*if (tasks == null)
 			id = 0;
 		else {
 			Task lastTask = tasks.get(tasks.size());
 			id = lastTask.getId() + 1;
-		}
+		}*/
+		id = tasks.size();
 
 		Task t = new Task.Builder().description(description).date(date)
 				.color(color).completed(false).id(id).build();

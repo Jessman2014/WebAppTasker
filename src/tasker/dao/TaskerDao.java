@@ -1,8 +1,6 @@
 package tasker.dao;
 
 import java.awt.Color;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +20,7 @@ public class TaskerDao {
 	users.add(u2);
 	users.add(u3);
 	users.add(u4);
-	
+	/*
 	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	
 	try {
@@ -35,7 +33,7 @@ public class TaskerDao {
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}
+	}*/
 	}
 	
 	public User getUser (String sid) {

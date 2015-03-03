@@ -45,10 +45,12 @@ public class Login extends HttpServlet {
 	*/
 	public static User validated (HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
-		for (int i = 0; i < cookies.length; i++) {
-			if (cookies[i].getName().equals("sid")) {
-				String sid = cookies[i].getValue();
-				return database.getUser(sid);
+		if (cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				if (cookies[i].getName().equals("sid")) {
+					String sid = cookies[i].getValue();
+					return database.getUser(sid);
+				}
 			}
 		}
 		return null;
@@ -57,7 +59,7 @@ public class Login extends HttpServlet {
 	@Override
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 					throws ServletException, java.io.IOException {
-		if (validated(request) == null)
+		if (Login.validated(request) == null)
 			response.sendRedirect("/tasker/login.html");
 		else
 			response.sendRedirect("/tasker/tasks");

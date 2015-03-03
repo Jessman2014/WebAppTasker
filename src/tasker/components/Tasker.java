@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ public class Tasker extends HttpServlet {
 			"    <script src=\"tasker.js\"></script>\n" + 
 			"</head>";	
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User u = Login.validated(request);
 		if (u == null) {
 			response.sendRedirect("/tasker/login.html");
@@ -55,11 +56,11 @@ public class Tasker extends HttpServlet {
 			writer.print("<body><div class=\"container\">");
 			writer.print("<div class=\"row\"> <div class=\"col-lg-2\">");
 			writer.print("<h1>Tasker</h1> </div> </div>");
-			writer.print("<div class=\"row\"> <div class=\"col-md-9\">");
+			writer.print("<div class=\"row\"> <div class=\"col-md-12\">");
 			writer.print("<form class=\"form-inline\" method=\"post\" action=\"/tasker/tasks\">");
 			writer.print("<input name=\"description\" type=\"text\" placeholder=\"task\" class=\"form-control\">");
 			writer.print("<input name=\"color\" type=\"color\" placeholder=\"black\" class=\"form-control\">");
-			writer.print("<input name=\"date\" type=\"date\" placeholder=\"mm/dd/yyyy\" class=\"form-control\">");
+			writer.print("<input name=\"date\" type=\"date\" placeholder=\"yyyy-MM-dd\" class=\"form-control\">");
 			writer.print("<input name=\"submit\" type=\"submit\" value=\"add\" class=\"form-control\"> ");
 			writer.print("</form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-4\">");
@@ -75,7 +76,13 @@ public class Tasker extends HttpServlet {
 			for (Task task : tasks) {
 				if (!(showTasks.equals("incomplete") && task.isCompleted())) {
 					writer.print("<tr> <form method=\"get\" action=\"/tasker/tasks\">");
-					writer.print("<td>" + task.getDescription() + "</td> <td> <input type=\"color\" value=\"#" + Integer.toHexString(task.getColor().getRGB() & 0xffffff) + "\"></td>");
+					writer.print("<td>" + task.getDescription() + "</td> <td> <input type=\"color\" value=\"");
+					Color color = task.getColor();
+					Formatter f = new Formatter(new StringBuffer("#"));
+					f.format("%02X", color.getRed());
+					f.format("%02X", color.getGreen());
+					f.format("%02X", color.getBlue());
+					writer.print(f + "\"></td>");
 					writer.print("<td>" + format.format(task.getDate()) + "</td> <td>");
 					if (task.isCompleted())
 						writer.print("yes");
@@ -83,16 +90,17 @@ public class Tasker extends HttpServlet {
 						writer.print("no");
 					writer.print("</td> <td> <input type=\"hidden\" name=\"delete\" value=\"" + task.getId() + "\">");
 					writer.print("<input type=\"submit\" value=\"x\"> </td> </form> </tr>");
+					f.close();
 				}
 			}
 			writer.print("</table> </div> </div> </div> </body> </html>");
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User u = Login.validated(request);
 		if (u == null) {
-			response.sendRedirect("/tasker/login.html");
+			response.sendRedirect("/login.html");
 		}
 		else {
 			try {

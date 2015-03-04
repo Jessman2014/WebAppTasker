@@ -10,6 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import tasker.dao.TaskerDao;
 import tasker.model.User;
 
+/**Lets users login and uses cookies to keep track.
+ * Provides validation for login to all other pages.
+ * Correct login or users already logged in will 
+ * be redirect to the Task page.
+ * @author Jesse Dahir-Kanehl
+ *
+ */
+
 @SuppressWarnings("serial")
 @WebServlet("/Login")
 public class Login extends HttpServlet {
@@ -19,30 +27,6 @@ public class Login extends HttpServlet {
 		return database;
 	}
 	
-	/*User u1 = new User.Builder()
-		.sid()
-		.username("Bilbo")
-		.password("Baggins")
-		.build();
-	
-	User u2 = new User.Builder()
-		.sid()
-		.username("Frodo")
-		.password("Hobbit")
-		.build();
-	
-	User u3 = new User.Builder()
-		.sid()
-		.username("Gandalf")
-		.password("Wizard")
-		.build();
-	
-	User u4 = new User.Builder()
-		.sid()
-		.username("Sauron")
-		.password("Evil")
-		.build();
-	*/
 	public static User validated (HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {

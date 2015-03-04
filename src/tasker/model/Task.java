@@ -3,6 +3,11 @@ package tasker.model;
 import java.awt.Color;
 import java.util.Date;
 
+/**Represents a task object with a builder.
+ * @author Jesse Dahir-Kanehl
+ *
+ */
+
 public class Task {
 	private String description;
 	private Date date;

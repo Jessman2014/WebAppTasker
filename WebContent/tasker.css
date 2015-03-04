@@ -5,6 +5,22 @@
 }
 
 th {
-	background-color: light grey;
+	background-color: lightgray;
 }
 
+.form-control {
+	margin: 5px;
+}
+
+input[type="submit"]{
+	background-color: ghostwhite;
+}
+
+form.form-inline input[type="color"] {
+	height: 30px;
+	vertical-align: middle;
+} 
+
+h1 {
+	color: darkblue;
+}

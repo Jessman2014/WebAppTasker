@@ -1,6 +1,7 @@
 package tasker.dao;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,32 +9,56 @@ import java.util.List;
 import tasker.model.Task;
 import tasker.model.User;
 
+/**Stores data for pages to use.
+ * Has functionality for retrieving user information
+ *  and adding or deleting tasks.
+ * @author Jesse Dahir-Kanehl
+ *
+ */
+
 public class TaskerDao {
 	private ArrayList<User> users = new ArrayList<>();
+	//date format for all pages to use
+	public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	
+	//this is where to manage users
 	public TaskerDao () {
-	User u1 = new User("4RcjPRZyBJNk8LJW2c3A", "Bilbo", "Baggins");
-	User u2 = new User("2qTxnnM542vdxRC3kYRf", "Frodo", "Hobbit");
-	User u3 = new User("CSALbR3L6Tmv32D64mSa", "Gandalf", "Wizard");
-	User u4 = new User("jAjZumCztLMquHW3zVMv", "Sauron", "Evil");
+		User u1 = new User.Builder()
+		.sid("4RcjPRZyBJNk8LJW2c3A")
+		.username("Bilbo")
+		.password("Baggins")
+		.filter("all")
+		.task(new ArrayList<Task>())
+		.build();
+	
+	User u2 = new User.Builder()
+		.sid("2qTxnnM542vdxRC3kYRf")
+		.username("Frodo")
+		.password("Hobbit")
+		.filter("all")
+		.task(new ArrayList<Task>())
+		.build();
+	
+	User u3 = new User.Builder()
+		.sid("CSALbR3L6Tmv32D64mSa")
+		.username("Gandalf")
+		.password("Wizard")
+		.filter("all")
+		.task(new ArrayList<Task>())
+		.build();
+	
+	User u4 = new User.Builder()
+		.sid("jAjZumCztLMquHW3zVMv")
+		.username("Sauron")
+		.password("Evil")
+		.filter("all")
+		.task(new ArrayList<Task>())
+		.build();
+		
 	users.add(u1);
 	users.add(u2);
 	users.add(u3);
 	users.add(u4);
-	/*
-	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-	
-	try {
-		addTask("hey there", format.parse("2015-03-26"), Color.CYAN, u1);
-		addTask("this is new task", format.parse("2015-03-27"), Color.BLUE, u1);
-		addTask("what is up dude", format.parse("2014-03-26"), Color.GREEN, u1);
-		addTask("another task", format.parse("2015-09-26"), Color.BLACK, u1);
-		addTask("garage talk", format.parse("2014-08-26"), Color.YELLOW, u1);
-		addTask("exception stuff", format.parse("2015-03-26"), Color.CYAN, u1);
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}*/
 	}
 	
 	public User getUser (String sid) {
@@ -44,10 +69,22 @@ public class TaskerDao {
 		return null;
 	}
 	
+	public String getSid (String username, String password) {
+		for (User user : users) {
+			if (user.getUsername().equals(username) && user.getPassword().equals(password))
+				return user.getSid();
+		}
+		return "";
+	}
+	
+	//Tasks are assigned the highest number available 
+	// and are considered complete if the date is in the past.
 	public void addTask(String description, Date date, Color color, User u) {
 		int id;
 		boolean completed = false;
-
+		Date today = new Date();
+		format.format(today);
+		
 		List<Task> tasks = u.getTasks();
 		if (tasks.size() == 0)
 			id = 0;
@@ -55,10 +92,11 @@ public class TaskerDao {
 			Task lastTask = tasks.get(tasks.size()-1);
 			id = lastTask.getId() + 1;
 		}
-		if (Date.)
+		if (date.before(today))
+			completed = true;
 
 		Task t = new Task.Builder().description(description).date(date)
-				.color(color).completed(false).id(id).build();
+				.color(color).completed(completed).id(id).build();
 
 		tasks.add(t);
 		u.setTasks(tasks);
@@ -71,26 +109,8 @@ public class TaskerDao {
 			if (task.getId() == id)
 				removalId = tasks.indexOf(task);
 		}
-		if (id > -1)
+		if (removalId > -1)
 			tasks.remove(removalId);
 		u.setTasks(tasks);
 	}
-	
-	public String getSid (String username, String password) {
-		for (User user : users) {
-			if (user.getUsername().equals(username) && user.getPassword().equals(password))
-				return user.getSid();
-		}
-		return "";
-	}
-	
-	/*
-	public boolean authenticateUser (String sid) {
-		for (User user : users) {
-			if (user.getSid().equals(sid))
-				return true;
-		}
-		return false;
-	}*/
-
 }

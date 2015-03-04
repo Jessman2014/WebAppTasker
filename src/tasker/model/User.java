@@ -1,12 +1,17 @@
 package tasker.model;
 
-import java.util.ArrayList;
 import java.util.List;
+
+/**Represents an user object with a builder.
+ * @author Jesse Dahir-Kanehl
+ *
+ */
 
 public class User {
 	private String sid;
 	private String username;
 	private String password;
+	private String filter;
 	private List<Task> tasks;
 	
 	public String getSid() {
@@ -27,23 +32,24 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getFilter() {
+		return filter;
+	}
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
 	public List<Task> getTasks() {
 		return tasks;
 	}
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
-	public User (String sid, String username, String password) {
-		this.sid = sid;
-		this.username = username;
-		this.password = password;
-		this.tasks = new ArrayList<>();
-	}
 	
-	/*private User (Builder builder) {
+	private User (Builder builder) {
 		this.sid = builder.sid;
 		this.username = builder.username;
 		this.password = builder.password;
+		this.filter = builder.filter;
 		this.tasks = builder.tasks;
 	}
 	
@@ -51,6 +57,7 @@ public class User {
 		private String sid;
 		private String username;
 		private String password;
+		private String filter;
 		private List<Task> tasks;
 		
 		public Builder() {}
@@ -70,6 +77,11 @@ public class User {
 			return this;
 		}
 		
+		public Builder filter (String filter) {
+			this.filter = filter;
+			return this;
+		}
+		
 		public Builder task (List<Task> tasks) {
 			this.tasks = tasks;
 			return this;
@@ -79,5 +91,5 @@ public class User {
 			return new User(this);
 		}
 	}
-	*/
+	
 }

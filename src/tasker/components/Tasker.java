@@ -32,6 +32,7 @@ public class Tasker extends HttpServlet {
 			"    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\">\n" + 
 			"\n" + 
 			"    <script src=\"https://code.jquery.com/jquery-2.1.3.min.js\"></script>\n" + 
+			"    <script src=\"http://cdn.jsdelivr.net/jquery.validation/1.13.1/jquery.validate.min.js\"></script>\n" +
 			"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js\"></script>\n" + 
 			"    <script src=\"tasker.js\"></script>\n" + 
 			"</head>";	
@@ -58,10 +59,10 @@ public class Tasker extends HttpServlet {
 			writer.print("<h1>Tasker</h1> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-12\">");
 			writer.print("<form class=\"form-inline\" method=\"post\" action=\"/tasker/tasks\">");
-			writer.print("<input name=\"description\" type=\"text\" placeholder=\"task\" class=\"form-control\">");
-			writer.print("<input name=\"color\" type=\"color\" placeholder=\"black\" class=\"form-control\">");
-			writer.print("<input name=\"date\" type=\"date\" placeholder=\"yyyy-MM-dd\" class=\"form-control\">");
-			writer.print("<input name=\"submit\" type=\"submit\" value=\"add\" class=\"form-control\"> ");
+			writer.print("<input name=\"description\" type=\"text\" placeholder=\"task\" required>");
+			writer.print("<input name=\"color\" type=\"color\" placeholder=\"black\">");
+			writer.print("<input name=\"date\" type=\"date\" placeholder=\"yyyy-MM-dd\" required>");
+			writer.print("<input name=\"submit\" type=\"submit\" value=\"add\"> ");
 			writer.print("</form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-4\">");
 			writer.print("<form method=\"get\" action=\"/tasker/tasks\">");
@@ -72,7 +73,7 @@ public class Tasker extends HttpServlet {
 				writer.print("Show only incomplete");
 			writer.print(" \"> </form> </div> </div>");
 			writer.print("<div class=\"row\"> <div class=\"col-md-9\">");
-			writer.print("<table class=\"table\"> <tr> <th>Description</th> <th>Color</th> <th>Due</th> <th>Completed</th> <th></th> </tr>");
+			writer.print("<table class=\"table table-bordered table-striped\"> <tr> <th>Description</th> <th>Color</th> <th>Due</th> <th>Completed</th> <th></th> </tr>");
 			for (Task task : tasks) {
 				if (!(showTasks.equals("incomplete") && task.isCompleted())) {
 					writer.print("<tr> <form method=\"get\" action=\"/tasker/tasks\">");

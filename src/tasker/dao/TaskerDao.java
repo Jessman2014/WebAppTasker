@@ -46,14 +46,16 @@ public class TaskerDao {
 	
 	public void addTask(String description, Date date, Color color, User u) {
 		int id;
+		boolean completed = false;
 
 		List<Task> tasks = u.getTasks();
 		if (tasks.size() == 0)
 			id = 0;
 		else {
-			Task lastTask = tasks.get(tasks.size());
+			Task lastTask = tasks.get(tasks.size()-1);
 			id = lastTask.getId() + 1;
 		}
+		if (Date.)
 
 		Task t = new Task.Builder().description(description).date(date)
 				.color(color).completed(false).id(id).build();
